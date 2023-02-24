@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.drone.controller.request.MedicationRequest;
-import com.drone.controller.response.DroneResponse;
 import com.drone.controller.response.MedicationItemsResponse;
 import com.drone.service.DroneService;
 import com.drone.service.MedicationService;
@@ -28,13 +27,13 @@ public class MedicationController {
 	@Autowired
 	private DroneService droneService;
 
-	@PostMapping(value = "/{id}/medication")
+	@PostMapping(value = "/{droneId}/medication")
 	@Operation(summary = "loading a drone with medication items")
-	public DroneResponse loadMedicationItemsToDrone(@PathVariable("id") String serialNumber,
+	public MedicationItemsResponse loadMedicationItemsToDrone(@PathVariable("droneId") String serialNumber,
 			@RequestBody MedicationRequest medicationRequest) {
-		DroneResponse droneResponse = medicationService.loadMedicationItemsToDrone(serialNumber, medicationRequest);
+		MedicationItemsResponse medicationItemsResponse = medicationService.loadMedicationItemsToDrone(serialNumber, medicationRequest);
 		log.info("medications are loaded to drone serial number [ %s ]", serialNumber);
-		return droneResponse;
+		return medicationItemsResponse;
 	}
 
 	@GetMapping(value = "/{id}/medication")

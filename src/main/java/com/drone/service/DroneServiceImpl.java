@@ -46,7 +46,7 @@ public class DroneServiceImpl implements DroneService {
 			throw new DroneNotFoundException(Message.DRONE_NOT_FOUND.getDescription(), description,
 					HttpStatus.BAD_REQUEST);
 		}
-		return Transformer.createMedicationResponse(existingDrone.getMedications());
+		return Transformer.createMedicationResponse(existingDrone);
 	}
 
 	@Override

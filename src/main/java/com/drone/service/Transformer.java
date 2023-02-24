@@ -12,6 +12,7 @@ import com.drone.controller.response.MedicationItemResponse;
 import com.drone.controller.response.MedicationItemsResponse;
 import com.drone.model.Drone;
 import com.drone.model.Medication;
+import com.drone.util.DroneState;
 
 public class Transformer {
 
@@ -23,9 +24,9 @@ public class Transformer {
 		return Drone.builder()
 				.serialNumber(droneRequest.getSerialNumber())
 				.model(droneRequest.getModel())
-				.weight(droneRequest.getWeight())
+				.weightLimit(droneRequest.getWeightLimit())
 				.batteryCapacity(droneRequest.getBatteryCapacity())
-				.droneState(droneRequest.getDroneState())
+				.droneState(DroneState.IDLE)
 				.build();
 	}
 
@@ -33,7 +34,7 @@ public class Transformer {
 		return DroneResponse.builder()
 				.serialNumber(drone.getSerialNumber())
 				.model(drone.getModel())
-				.weight(drone.getWeight())
+				.weightLimit(drone.getWeightLimit())
 				.batteryCapacity(drone.getBatteryCapacity())
 				.droneState(drone.getDroneState())
 				.build();
@@ -48,12 +49,17 @@ public class Transformer {
 				.build();
 	}
 
-	public static MedicationItemsResponse createMedicationResponse(List<Medication> medications) {		
+	public static MedicationItemsResponse createMedicationResponse(Drone drone ) {		
 		List<MedicationItemResponse> medicationItems = new ArrayList<>();
-		for (Medication medication : medications) {
+		for (Medication medication : drone.getMedications()) {
 			medicationItems.add(createMedicationItem(medication));
 		}
 		return MedicationItemsResponse.builder()
+				.serialNumber(drone.getSerialNumber())
+				.model(drone.getModel())
+				.weightLimit(drone.getWeightLimit())
+				.batteryCapacity(drone.getBatteryCapacity())
+				.droneState(drone.getDroneState())
 				.medicationItems(medicationItems)
 				.build();
 	}

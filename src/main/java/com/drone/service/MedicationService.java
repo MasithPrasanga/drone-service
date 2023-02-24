@@ -1,10 +1,10 @@
 package com.drone.service;
 
 import com.drone.controller.request.MedicationRequest;
-import com.drone.controller.response.DroneResponse;
+import com.drone.controller.response.MedicationItemsResponse;
 
 public interface MedicationService {
 
-	DroneResponse loadMedicationItemsToDrone(String serialNumber, MedicationRequest medicationRequest);
+	MedicationItemsResponse loadMedicationItemsToDrone(String serialNumber, MedicationRequest medicationRequest);
 
 }

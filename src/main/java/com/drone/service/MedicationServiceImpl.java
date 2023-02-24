@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.drone.controller.request.MedicationItem;
 import com.drone.controller.request.MedicationRequest;
-import com.drone.controller.response.DroneResponse;
+import com.drone.controller.response.MedicationItemsResponse;
 import com.drone.exception.DroneNotFoundException;
 import com.drone.model.Drone;
 import com.drone.model.Medication;
@@ -29,7 +29,8 @@ public class MedicationServiceImpl implements MedicationService {
 	private MedicationRepository medicationRepository;
 
 	@Override
-	public DroneResponse loadMedicationItemsToDrone(String serialNumber, MedicationRequest medicationRequest) {
+	public MedicationItemsResponse loadMedicationItemsToDrone(String serialNumber,
+			MedicationRequest medicationRequest) {
 		Drone existingDrone = droneRepository.findDroneBySerialNumber(serialNumber);
 		if (ObjectUtils.isEmpty(existingDrone)) {
 			String description = String.format("drone not found for the [ %s ] serial number", serialNumber);
@@ -52,6 +53,6 @@ public class MedicationServiceImpl implements MedicationService {
 		existingDrone.setMedications(medications);
 		existingDrone.setDroneState(DroneState.LOADED);
 		Drone updatedDrone = droneRepository.save(existingDrone);
-		return Transformer.createDroneResponse(updatedDrone);
+		return Transformer.createMedicationResponse(updatedDrone);
 	}
 }

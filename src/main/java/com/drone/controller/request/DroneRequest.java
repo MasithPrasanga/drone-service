@@ -1,7 +1,5 @@
 package com.drone.controller.request;
 
-import com.drone.util.DroneState;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,12 +21,9 @@ public class DroneRequest {
 	private String model;
 
 	@NonNull
-	private Double weight;
+	private Double weightLimit;
 
 	@NonNull
 	private Integer batteryCapacity;
-
-	@NonNull
-	private DroneState droneState;
 
 }

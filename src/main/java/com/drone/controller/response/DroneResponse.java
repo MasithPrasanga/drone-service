@@ -16,7 +16,7 @@ import lombok.Setter;
 public class DroneResponse {
 	private String serialNumber;
 	private String model;
-	private Double weight;
+	private Double weightLimit;
 	private Integer batteryCapacity;
 	private DroneState droneState;
 }
