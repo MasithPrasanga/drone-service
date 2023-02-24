@@ -10,7 +10,7 @@ public interface DroneService {
 
 	DroneResponse registerDrone(DroneRequest droneRequest);
 
-	MedicationItemsResponse getMedicationItems(String droneId);
+	MedicationItemsResponse getMedicationItems(String serialNumber);
 
 	DronesResponse getAvailableDrones();
 

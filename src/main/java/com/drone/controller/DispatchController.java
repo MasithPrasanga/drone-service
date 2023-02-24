@@ -11,10 +11,13 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.drone.controller.request.DroneRequest;
+import com.drone.controller.request.MedicationRequest;
 import com.drone.controller.response.DroneBatteryLevelResponse;
 import com.drone.controller.response.DroneResponse;
 import com.drone.controller.response.DronesResponse;
+import com.drone.controller.response.MedicationItemsResponse;
 import com.drone.service.DroneService;
+import com.drone.service.MedicationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,13 +25,16 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/drone")
 @Slf4j
-public class DroneController {
+public class DispatchController {
 
 	@Autowired
 	private DroneService droneService;
 
+	@Autowired
+	private MedicationService medicationService;
+
 	@PostMapping
-	@Operation(summary = "register drone")
+	@Operation(summary = "registering a drone")
 	@ResponseStatus(HttpStatus.CREATED)
 	public DroneResponse createDrone(@RequestBody DroneRequest droneRequest) {
 		DroneResponse registeredDrone = droneService.registerDrone(droneRequest);
@@ -36,15 +42,32 @@ public class DroneController {
 		return registeredDrone;
 	}
 
+	@PostMapping(value = "/{droneId}/medication")
+	@Operation(summary = "loading a drone with medication items")
+	public MedicationItemsResponse loadMedicationItemsToDrone(@PathVariable("droneId") String serialNumber,
+			@RequestBody MedicationRequest medicationRequest) {
+		MedicationItemsResponse medicationItemsResponse = medicationService.loadMedicationItemsToDrone(serialNumber,
+				medicationRequest);
+		log.info("medications are loaded to drone serial number [ %s ]", serialNumber);
+		return medicationItemsResponse;
+	}
+
+	@GetMapping(value = "/{droneId}/medication")
+	@Operation(summary = "check loaded medication items for a given drone")
+	public MedicationItemsResponse getMedicationItemsForDrone(@PathVariable("droneId") String serialNumber) {
+		return droneService.getMedicationItems(serialNumber);
+	}
+
 	@GetMapping("/available")
-	@Operation(summary = "get available drones for loading")
+	@Operation(summary = "check available drones for loading")
 	public DronesResponse getAvailableDrones() {
 		return droneService.getAvailableDrones();
 	}
 
 	@GetMapping("/{droneId}/battery")
-	@Operation(summary = "get battery level for a drone")
+	@Operation(summary = "check battery level for a drone")
 	public DroneBatteryLevelResponse getBatteryLevel(@PathVariable("droneId") String serialNumber) {
 		return droneService.getBatteryLevel(serialNumber);
 	}
+
 }

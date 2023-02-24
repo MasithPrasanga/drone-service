@@ -39,10 +39,10 @@ public class DroneServiceImpl implements DroneService {
 	}
 
 	@Override
-	public MedicationItemsResponse getMedicationItems(String droneId) {
-		Drone existingDrone = droneRepository.findDroneBySerialNumber(droneId);
+	public MedicationItemsResponse getMedicationItems(String serialNumber) {
+		Drone existingDrone = droneRepository.findDroneBySerialNumber(serialNumber);
 		if (ObjectUtils.isEmpty(existingDrone)) {
-			String description = String.format("drone not found for the [ %s ] serial number", droneId);
+			String description = String.format("drone not found for the [ %s ] serial number", serialNumber);
 			throw new DroneNotFoundException(Message.DRONE_NOT_FOUND.getDescription(), description,
 					HttpStatus.BAD_REQUEST);
 		}

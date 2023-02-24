@@ -1,10 +1,14 @@
 package com.drone.controller.request;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -14,13 +18,15 @@ import lombok.Setter;
 @Builder
 public class MedicationItem {
 
-	@NonNull
+	@NotNull(message = "Name must not be null")
+	@NotBlank(message = "Name must not be empty")
+	@Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "Name can only contain letters, numbers, hyphens, and underscores")
 	private String name;
 
-	@NonNull
+	@DecimalMin(value = "0.0", inclusive = true, message = "Weight must be a non-negative value")
 	private Double weight;
 
-	@NonNull
+	@Pattern(regexp = "^[A-Z0-9_]+$", message = "Code can only contain uppercase letters, underscores, and numbers")
 	private String code;
 
 	private String imageURL;

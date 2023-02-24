@@ -2,11 +2,11 @@ package com.drone.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class DroneNotFoundException extends DispatcherException {
+public class DroneModelNotFoundException extends DispatcherException {
 
 	private static final long serialVersionUID = 1L;
 
-	public DroneNotFoundException(String errorCode, String message, HttpStatus httpStatusCode) {
+	public DroneModelNotFoundException(String errorCode, String message, HttpStatus httpStatusCode) {
 		super(errorCode, message, httpStatusCode);
 	}
 

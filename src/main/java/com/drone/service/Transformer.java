@@ -3,6 +3,8 @@ package com.drone.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.util.ObjectUtils;
+
 import com.drone.controller.request.DroneRequest;
 import com.drone.controller.request.MedicationItem;
 import com.drone.controller.response.DroneBatteryLevelResponse;
@@ -12,18 +14,27 @@ import com.drone.controller.response.MedicationItemResponse;
 import com.drone.controller.response.MedicationItemsResponse;
 import com.drone.model.Drone;
 import com.drone.model.Medication;
+import com.drone.util.DroneModel;
 import com.drone.util.DroneState;
 
-public class Transformer {
-
-	private Transformer() {
-		super();
-	}
-
+public interface Transformer {
+	
 	public static Drone createDrone(DroneRequest droneRequest) {
+		DroneModel validDroneModel = null;
+		for (DroneModel droneModel : DroneModel.values()) {
+			if(droneModel.getValue().equals(droneRequest.getModel())) {
+				validDroneModel = droneModel;
+				break;
+			}
+		}
+		
+		if (ObjectUtils.isEmpty(validDroneModel)) {
+			
+		}
+
 		return Drone.builder()
 				.serialNumber(droneRequest.getSerialNumber())
-				.model(droneRequest.getModel())
+				.model(validDroneModel)
 				.weightLimit(droneRequest.getWeightLimit())
 				.batteryCapacity(droneRequest.getBatteryCapacity())
 				.droneState(DroneState.IDLE)
@@ -33,7 +44,7 @@ public class Transformer {
 	public static DroneResponse createDroneResponse(Drone drone) {
 		return DroneResponse.builder()
 				.serialNumber(drone.getSerialNumber())
-				.model(drone.getModel())
+				.model(drone.getModel().getValue())
 				.weightLimit(drone.getWeightLimit())
 				.batteryCapacity(drone.getBatteryCapacity())
 				.droneState(drone.getDroneState())
@@ -56,7 +67,7 @@ public class Transformer {
 		}
 		return MedicationItemsResponse.builder()
 				.serialNumber(drone.getSerialNumber())
-				.model(drone.getModel())
+				.model(drone.getModel().getValue())
 				.weightLimit(drone.getWeightLimit())
 				.batteryCapacity(drone.getBatteryCapacity())
 				.droneState(drone.getDroneState())
@@ -92,4 +103,5 @@ public class Transformer {
 				.batteryCapacity(existingDrone.getBatteryCapacity())
 				.build();
 	}
+
 }

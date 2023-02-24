@@ -1,10 +1,17 @@
 package com.drone.controller.request;
 
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Range;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
@@ -14,16 +21,20 @@ import lombok.Setter;
 @Builder
 public class DroneRequest {
 
-	@NonNull
+	@NotNull(message = "Serial Number must not be null")
+	@NotBlank(message = "Serial Number must not be empty")
+	@Size(max = 100, message = "Serial number cannot exceed 100 characters")
 	private String serialNumber;
 
-	@NonNull
+	@NotNull(message = "Model Number must not be null")
+	@NotBlank(message = "Model Number must not be empty")
 	private String model;
 
-	@NonNull
-	private Double weightLimit;
+	@DecimalMin(value = "0.0", inclusive = true, message = "Weight limit must be a non-negative value")
+    @DecimalMax(value = "500.0", inclusive = true, message = "Weight limit must not be greater than 500")
+    private Double weightLimit;
 
-	@NonNull
+	@Range(min = 0, max = 100, message = "Battery capacity must be 0 or 100")
 	private Integer batteryCapacity;
 
 }

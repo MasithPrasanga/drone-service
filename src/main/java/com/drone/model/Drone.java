@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.drone.util.DroneModel;
 import com.drone.util.DroneState;
 
 import lombok.AllArgsConstructor;
@@ -34,7 +35,8 @@ public class Drone {
 	private String serialNumber;
 
 	@Column(name = "model")
-	private String model;
+	@Enumerated(EnumType.STRING)
+	private DroneModel model;
 
 	@Column(name = "weight_limit")
 	private Double weightLimit;

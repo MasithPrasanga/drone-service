@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import com.drone.controller.request.MedicationItem;
 import com.drone.controller.request.MedicationRequest;
 import com.drone.controller.response.MedicationItemsResponse;
+import com.drone.exception.DroneBatteryLowException;
 import com.drone.exception.DroneNotFoundException;
+import com.drone.exception.DroneNotIdleException;
+import com.drone.exception.WeightLimitExceedException;
 import com.drone.model.Drone;
 import com.drone.model.Medication;
 import com.drone.repository.DroneRepository;
@@ -35,12 +38,34 @@ public class MedicationServiceImpl implements MedicationService {
 		if (ObjectUtils.isEmpty(existingDrone)) {
 			String description = String.format("drone not found for the [ %s ] serial number", serialNumber);
 			throw new DroneNotFoundException(Message.DRONE_NOT_FOUND.getDescription(), description,
+					HttpStatus.NOT_FOUND);
+		}
+
+		if (!existingDrone.getDroneState().equals(DroneState.IDLE)) {
+			String description = "To load medications drone must be in the IDEL state";
+			throw new DroneNotIdleException(Message.DRONE_STATE_IS_NOT_IDLE.getDescription(), description,
 					HttpStatus.BAD_REQUEST);
 		}
 
-		// drone should be IDLE state
+		if (existingDrone.getBatteryCapacity() < 25) {
+			String description = "drone battery capacity must be at least 25%";
+			throw new DroneBatteryLowException(Message.DRONE_BATTERY_LOW.getDescription(), description,
+					HttpStatus.BAD_REQUEST);
+		}
 
-		// medication weight should not exceed
+		double totalWeight = 0;
+		for (MedicationItem MedicationItem : medicationRequest.getMedicationItems()) {
+			totalWeight = totalWeight + MedicationItem.getWeight();
+		}
+
+		if (totalWeight <= existingDrone.getWeightLimit()) {
+			existingDrone.setDroneState(DroneState.LOADING);
+			droneRepository.save(existingDrone);
+		} else {
+			String description = "Total weight of medications exceeds drone's weight limit";
+			throw new WeightLimitExceedException(Message.EXCEED_WEIGHT_LIMIT.getDescription(), description,
+					HttpStatus.BAD_REQUEST);
+		}
 
 		List<Medication> medications = new ArrayList<>();
 		for (MedicationItem MedicationItem : medicationRequest.getMedicationItems()) {
