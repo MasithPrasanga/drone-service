@@ -21,24 +21,25 @@ import com.drone.util.Message;
 
 @Service
 public class MedicationServiceImpl implements MedicationService {
-	
+
 	@Autowired
 	private DroneRepository droneRepository;
-	
+
 	@Autowired
 	private MedicationRepository medicationRepository;
-	
+
 	@Override
-	public DroneResponse loadMedicationItemsToDrone(MedicationRequest medicationRequest) {
-		Drone existingDrone = droneRepository.findDroneBySerialNumber(medicationRequest.getDroneSerialNumber());
+	public DroneResponse loadMedicationItemsToDrone(String serialNumber, MedicationRequest medicationRequest) {
+		Drone existingDrone = droneRepository.findDroneBySerialNumber(serialNumber);
 		if (ObjectUtils.isEmpty(existingDrone)) {
-			String description = String.format("drone not found for the [ %s ] serial number", medicationRequest.getDroneSerialNumber());
-			throw new DroneNotFoundException(Message.DRONE_NOT_FOUND.getDescription(), description, HttpStatus.BAD_REQUEST);
+			String description = String.format("drone not found for the [ %s ] serial number", serialNumber);
+			throw new DroneNotFoundException(Message.DRONE_NOT_FOUND.getDescription(), description,
+					HttpStatus.BAD_REQUEST);
 		}
-		
+
 		// drone should be IDLE state
-		
-		// medication weight should not exceed 
+
+		// medication weight should not exceed
 
 		List<Medication> medications = new ArrayList<>();
 		for (MedicationItem MedicationItem : medicationRequest.getMedicationItems()) {

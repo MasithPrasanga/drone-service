@@ -1,7 +1,5 @@
 package com.drone.controller.response;
 
-import com.drone.util.DroneState;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,10 +11,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class DroneResponse {
-	private String serialNumber;
-	private String model;
+public class MedicationItemResponse {
+
+	private String id;
+	private String name;
 	private Double weight;
-	private Integer batteryCapacity;
-	private DroneState droneState;
+	private String code;
+	private String imageURL;
+	private String droneId;
+
 }

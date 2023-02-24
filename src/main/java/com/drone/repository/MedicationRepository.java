@@ -7,7 +7,5 @@ import com.drone.model.Medication;
 
 @Repository
 public interface MedicationRepository extends JpaRepository<Medication, String> {
-	
-	
 
 }

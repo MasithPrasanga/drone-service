@@ -5,6 +5,6 @@ import com.drone.controller.response.DroneResponse;
 
 public interface MedicationService {
 
-	DroneResponse loadMedicationItemsToDrone(MedicationRequest medicationRequest);
+	DroneResponse loadMedicationItemsToDrone(String serialNumber, MedicationRequest medicationRequest);
 
 }

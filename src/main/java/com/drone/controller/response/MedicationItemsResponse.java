@@ -1,5 +1,7 @@
 package com.drone.controller.response;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,13 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MedicationItem {
+public class MedicationItemsResponse {
 
-	private String id;
-	private String name;
-	private Integer weight;
-	private String code;
-	private String imageURL;
-	private String droneId;
+	private List<MedicationItemResponse> medicationItems;
 
 }

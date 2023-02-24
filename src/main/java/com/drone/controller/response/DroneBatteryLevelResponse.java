@@ -1,9 +1,5 @@
 package com.drone.controller.response;
 
-import java.util.List;
-
-import com.drone.controller.request.MedicationItem;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,8 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MedicationResponse {
+public class DroneBatteryLevelResponse {
 
-	private List<MedicationItem> medicationItems;
+	private String serialNumber;
+	private Integer batteryCapacity;
 
 }

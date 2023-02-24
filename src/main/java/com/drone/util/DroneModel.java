@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public enum DroneModel {
 
-	LIGHT_WEIGHT("Lightweight"), 
-	MIDDLE_WEIGHT("Middleweight"), 
-	CRUISER_WEIGHT("Cruiserweight"),
+	LIGHT_WEIGHT("Lightweight"), MIDDLE_WEIGHT("Middleweight"), CRUISER_WEIGHT("Cruiserweight"),
 	HEAVY_WEIGHT("Heavyweight");
 
 	private String value;
