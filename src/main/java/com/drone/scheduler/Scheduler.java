@@ -31,9 +31,9 @@ public class Scheduler {
 	private DroneBatteryLevelHistoryRepository droneBatteryLevelHistoryRepository;
 
 	/**
-	 * This scheduler is responsible to update the battery level
-	 * if the drone is at IDEL state for every minute battery level is increasing 2% 
-	 * if the drone is at any other state for every minute battery level is decreasing 1%
+	 * This scheduler is responsible to update the battery level if the drone is at
+	 * IDEL state for every minute battery level is increasing 2% if the drone is at
+	 * any other state for every minute battery level is decreasing 1%
 	 * 
 	 * This runs every minute
 	 */
@@ -53,29 +53,28 @@ public class Scheduler {
 	}
 
 	/**
-	 * This scheduler is responsible to add batter level to the drone battery level history table
+	 * This scheduler is responsible to add batter level to the drone battery level
+	 * history table
 	 * 
 	 * This runs every 5 minutes
 	 */
-	@Scheduled(cron = "0 */5 * ? * *")
+	@Scheduled(cron = "0 */5 * * * *")
 	@Transactional
 	public void runAuditScheduler() {
 		List<Drone> drones = droneRepository.findAll();
 		List<DroneBatteryLevelHistory> history = new ArrayList<>();
 		for (Drone drone : drones) {
 			DroneBatteryLevelHistory droneBatteryLevelHistory = DroneBatteryLevelHistory.builder()
-					.serialNumber(drone.getSerialNumber())
-					.batteryLevel(drone.getBatteryCapacity())
-					.createdDate(new Date())
-					.build();
+					.serialNumber(drone.getSerialNumber()).batteryLevel(drone.getBatteryCapacity())
+					.createdDate(new Date()).build();
 			history.add(droneBatteryLevelHistory);
 		}
-		droneBatteryLevelHistoryRepository.saveAll(history);		
+		droneBatteryLevelHistoryRepository.saveAll(history);
 	}
-	
+
 	/**
-	 * This scheduler is responsible to delete all the history records
-	 * older than two days
+	 * This scheduler is responsible to delete all the history records older than
+	 * two days
 	 * 
 	 * This run once per day at midnight
 	 */
@@ -85,6 +84,70 @@ public class Scheduler {
 		LocalDate twoDaysAgo = LocalDate.now(ZoneId.systemDefault()).minusDays(2);
 		Date date = Date.from(twoDaysAgo.atStartOfDay(ZoneId.systemDefault()).toInstant());
 		droneBatteryLevelHistoryRepository.deleteByCreatedDateBefore(date);
+	}
+
+	/**
+	 * This scheduler is responsible to make all drones with LOADED state to
+	 * DELIVERING state within 5 minutes of medication loading
+	 * 
+	 * This runs for every 5 minutes
+	 */
+	@Scheduled(cron = "0 */5 * * * *")
+	@Transactional
+	public void scheduleMedicationDelivery() {
+		List<Drone> drons = droneRepository.findDroneByDroneState(DroneState.LOADED);
+		for (Drone drone : drons) {
+			drone.setDroneState(DroneState.DELIVERING);
+		}
+		droneRepository.saveAll(drons);
+	}
+
+	/**
+	 * This scheduler is responsible to make all drones with DELIVERING state to
+	 * DELIVERED state after 30 minutes of maximum delivery time
+	 * 
+	 * This runs for every 30 minutes
+	 */
+	@Scheduled(cron = "0 */30 * * * *")
+	@Transactional
+	public void scheduleUnloadingMedications() {
+		List<Drone> drons = droneRepository.findDroneByDroneState(DroneState.DELIVERING);
+		for (Drone drone : drons) {
+			drone.setDroneState(DroneState.DELIVERED);
+		}
+		droneRepository.saveAll(drons);
+	}
+
+	/**
+	 * This scheduler is responsible to make all drones with DELIVERED state to
+	 * RETURNING state after 5 minutes of maximum waiting time
+	 * 
+	 * This runs for every 5 minutes
+	 */
+	@Scheduled(cron = "0 */5 * * * *")
+	@Transactional
+	public void scheduleDroneReturning() {
+		List<Drone> drons = droneRepository.findDroneByDroneState(DroneState.DELIVERED);
+		for (Drone drone : drons) {
+			drone.setDroneState(DroneState.RETURNING);
+		}
+		droneRepository.saveAll(drons);
+	}
+
+	/**
+	 * This scheduler is responsible to make all drones with RETURNING state to IDEL
+	 * state after 30 minutes of maximum returning time
+	 * 
+	 * This runs for every 30 minutes
+	 */
+	@Scheduled(cron = "0 */30 * * * *")
+	@Transactional
+	public void scheduleReturnedDronesToIdle() {
+		List<Drone> drons = droneRepository.findDroneByDroneState(DroneState.RETURNING);
+		for (Drone drone : drons) {
+			drone.setDroneState(DroneState.IDLE);
+		}
+		droneRepository.saveAll(drons);
 	}
 
 }

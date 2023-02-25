@@ -92,13 +92,17 @@ The project uses an in-memory H2 database, which is preloaded with some sample d
     
 ### Assumptions
 
- - medications can only be loaded when a drone is at IDEL state
- - at a time drone is delivering medications to only one location
- - when a new drone is created it is at IDEL state
- - SerialNumber is a unique number for drone and each and every done can be identified by using serial number
- - drone battery level is reducing 1% per minute rate when the drone is not in the IDEL state
- - drone is charged only at IDEL state with 2% per minute rate
- - at the begining there are 10 drones
+ - Medications can only be loaded onto a drone while it is in the idle state
+ - The drone is capable of delivering medications to only one location at a time
+ - When a new drone is created, it starts in the IDLE state
+ - The Serial Number is a distinctive identifier for each drone, enabling the identification of each individual unit
+ - The rate of reduction of drone battery level is 1% per minute when the drone is in a non-IDLE state
+ - The drone can only be charged when it is in the IDEL state and the charging rate is 2% per minute
+ - After being loaded with medications, the drone commences the delivery process within a period of 5 minutes
+ - The drone is programmed to deliver medications only to locations that can be reached within a 30-minute timeframe
+ - After delivering medications to the designated location, the drone is scheduled to start returning within 5 minutes
+ - When drone starts returning, the drone is scheduled to return within 30 minutes
+ - Once a drone returns, it will transition to the IDLE state within 5 minutes
  
  
 ### Notes
