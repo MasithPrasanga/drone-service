@@ -1,8 +1,9 @@
 package com.drone.scheduler;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -29,7 +30,14 @@ public class Scheduler {
 	@Autowired
 	private DroneBatteryLevelHistoryRepository droneBatteryLevelHistoryRepository;
 
-	@Scheduled(cron = "0 * * * * *")
+	/**
+	 * This scheduler is responsible to update the battery level
+	 * if the drone is at IDEL state for every minute battery level is increasing 2% 
+	 * if the drone is at any other state for every minute battery level is decreasing 1%
+	 * 
+	 * This runs every minute
+	 */
+	@Scheduled(cron = "0 * * * * *") // run every minute
 	@Transactional
 	public void runDroneBatteryScheduler() {
 		List<Drone> drones = droneRepository.findAll();
@@ -44,6 +52,11 @@ public class Scheduler {
 		droneRepository.saveAll(drones);
 	}
 
+	/**
+	 * This scheduler is responsible to add batter level to the drone battery level history table
+	 * 
+	 * This runs every 5 minutes
+	 */
 	@Scheduled(cron = "0 */5 * ? * *")
 	@Transactional
 	public void runAuditScheduler() {
@@ -51,14 +64,27 @@ public class Scheduler {
 		List<DroneBatteryLevelHistory> history = new ArrayList<>();
 		for (Drone drone : drones) {
 			DroneBatteryLevelHistory droneBatteryLevelHistory = DroneBatteryLevelHistory.builder()
-					.serialNumber(drone.getSerialNumber()).batteryLevel(drone.getBatteryCapacity()).build();
+					.serialNumber(drone.getSerialNumber())
+					.batteryLevel(drone.getBatteryCapacity())
+					.createdDate(new Date())
+					.build();
 			history.add(droneBatteryLevelHistory);
 		}
-		droneBatteryLevelHistoryRepository.saveAll(history);
-
-		// removing history records older than two days
-		LocalDate twoDaysAgo = LocalDate.now().minus(2, ChronoUnit.DAYS);
-		droneBatteryLevelHistoryRepository.deleteByDateBefore(twoDaysAgo);
+		droneBatteryLevelHistoryRepository.saveAll(history);		
+	}
+	
+	/**
+	 * This scheduler is responsible to delete all the history records
+	 * older than two days
+	 * 
+	 * This run once per day at midnight
+	 */
+	@Scheduled(cron = "0 0 0 * * *")
+	@Transactional
+	public void deleteOldRecords() {
+		LocalDate twoDaysAgo = LocalDate.now(ZoneId.systemDefault()).minusDays(2);
+		Date date = Date.from(twoDaysAgo.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		droneBatteryLevelHistoryRepository.deleteByCreatedDateBefore(date);
 	}
 
 }
