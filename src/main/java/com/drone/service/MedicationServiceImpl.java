@@ -62,7 +62,7 @@ public class MedicationServiceImpl implements MedicationService {
 			existingDrone.setDroneState(DroneState.LOADING);
 			droneRepository.save(existingDrone);
 		} else {
-			String description = "Total weight of medications exceeds drone's weight limit";
+			String description = String.format("maximum medication weight this drone can carry is [ %s ] and medication weight is [ %s ]", existingDrone.getWeightLimit(), totalWeight);
 			throw new WeightLimitExceedException(Message.EXCEED_WEIGHT_LIMIT.getDescription(), description,
 					HttpStatus.BAD_REQUEST);
 		}

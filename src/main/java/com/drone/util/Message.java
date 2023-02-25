@@ -13,7 +13,8 @@ public enum Message {
 	DRONE_NOT_FOUND("Drone Not Found"),
 	DRONE_STATE_IS_NOT_IDLE("Drone State Is Not IDLE"),
 	EXCEED_WEIGHT_LIMIT("Exceeds Weight Limit"),
-	DRONE_BATTERY_LOW("Drone Battery Low");
+	DRONE_BATTERY_LOW("Drone Battery Low"),
+	INVALID_REQUEST("Invalid Request");
 
 	private String description;
 

@@ -18,8 +18,8 @@ import lombok.Setter;
 @Builder
 public class MedicationItem {
 
-	@NotNull(message = "Name must not be null")
 	@NotBlank(message = "Name must not be empty")
+	@NotNull(message = "Name must not be null")
 	@Pattern(regexp = "^[a-zA-Z0-9_-]+$", message = "Name can only contain letters, numbers, hyphens, and underscores")
 	private String name;
 

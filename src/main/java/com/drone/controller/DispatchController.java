@@ -1,7 +1,10 @@
 package com.drone.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +21,7 @@ import com.drone.controller.response.DronesResponse;
 import com.drone.controller.response.MedicationItemsResponse;
 import com.drone.service.DroneService;
 import com.drone.service.MedicationService;
+import com.drone.service.ValidationService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -33,10 +37,14 @@ public class DispatchController {
 	@Autowired
 	private MedicationService medicationService;
 
+	@Autowired
+	private ValidationService validationService;
+
 	@PostMapping
 	@Operation(summary = "registering a drone")
 	@ResponseStatus(HttpStatus.CREATED)
-	public DroneResponse createDrone(@RequestBody DroneRequest droneRequest) {
+	public DroneResponse createDrone(@RequestBody @Valid DroneRequest droneRequest, BindingResult result) {
+		validationService.validateInput(result);
 		DroneResponse registeredDrone = droneService.registerDrone(droneRequest);
 		log.info("drone is created with serial number [ {} ]", registeredDrone.getSerialNumber());
 		return registeredDrone;
@@ -45,7 +53,8 @@ public class DispatchController {
 	@PostMapping(value = "/{droneId}/medication")
 	@Operation(summary = "loading a drone with medication items")
 	public MedicationItemsResponse loadMedicationItemsToDrone(@PathVariable("droneId") String serialNumber,
-			@RequestBody MedicationRequest medicationRequest) {
+			@RequestBody @Valid MedicationRequest medicationRequest, BindingResult result) {
+		validationService.validateInput(result);
 		MedicationItemsResponse medicationItemsResponse = medicationService.loadMedicationItemsToDrone(serialNumber,
 				medicationRequest);
 		log.info("medications are loaded to drone serial number [ %s ]", serialNumber);

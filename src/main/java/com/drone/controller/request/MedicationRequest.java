@@ -2,6 +2,7 @@ package com.drone.controller.request;
 
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
@@ -16,7 +17,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class MedicationRequest {
-	
+
+	@Valid
 	@Size(min = 1, message = "At least one medication item must be present")
 	private List<MedicationItem> medicationItems;
 

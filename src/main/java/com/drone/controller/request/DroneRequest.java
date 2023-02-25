@@ -31,8 +31,8 @@ public class DroneRequest {
 	private String model;
 
 	@DecimalMin(value = "0.0", inclusive = true, message = "Weight limit must be a non-negative value")
-    @DecimalMax(value = "500.0", inclusive = true, message = "Weight limit must not be greater than 500")
-    private Double weightLimit;
+	@DecimalMax(value = "500.0", inclusive = true, message = "Weight limit must not be greater than 500")
+	private Double weightLimit;
 
 	@Range(min = 0, max = 100, message = "Battery capacity must be 0 or 100")
 	private Integer batteryCapacity;
