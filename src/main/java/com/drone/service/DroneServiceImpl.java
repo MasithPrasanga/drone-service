@@ -19,10 +19,7 @@ import com.drone.repository.DroneRepository;
 import com.drone.util.DroneState;
 import com.drone.util.Message;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Service
-@Slf4j
 public class DroneServiceImpl implements DroneService {
 
 	@Autowired
