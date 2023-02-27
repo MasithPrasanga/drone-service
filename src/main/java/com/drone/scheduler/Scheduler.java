@@ -18,10 +18,7 @@ import com.drone.repository.DroneBatteryLevelHistoryRepository;
 import com.drone.repository.DroneRepository;
 import com.drone.util.DroneState;
 
-import lombok.extern.slf4j.Slf4j;
-
 @Component
-@Slf4j
 public class Scheduler {
 
 	@Autowired
