@@ -48,6 +48,7 @@ To build and run this application, you will need
  - H2 Database
  - Gradle
  - Docker
+ - JUnit 5
 
 
 ### Build and Run Instructions
@@ -62,6 +63,10 @@ To build and run this application, you will need
  - Build the application using Gradle
 
 			./gradlew build
+			
+ - To run the JUnit test cases seperately
+ 
+			./gradlew test
     
  - Create a Docker image
  
